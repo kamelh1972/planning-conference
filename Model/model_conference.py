@@ -18,6 +18,17 @@ class Conference():
             conference[key] = HydrateConference(value)
         return conference
 
+    def single_conference(self,id):
+        sql = "SELECT * FROM conference WHERE id = %s;"
+        self.db.initialize_connection()
+        self.db.cursor.execute(sql,(id,))
+        conference = self.db.cursor.fetchone()
+        self.db.close_connection()
+        if conference:
+            return HydrateConference(conference)
+        return False
+
+
     def create_conference(self, event):
         """add new entry in table conference"""
         sql = "INSERT INTO conference(titre, resume, date_heure,date_de_creation,speaker_id) VALUES(%s, %s, %s, now(),%s);"
@@ -28,12 +39,15 @@ class Conference():
         self.db.close_connection()
         return True
 
-    def update_conference(self, titre, resume, date_heure, conference_id,speaker_id):
-        """update data in table conference"""
-        self.sql = "UPDATE conference SET titre = %s, resume = %s, date_heure = %s speaker_id = %s WHERE conference_id =%s;"
-        self.values = (titre, resume, date_heure, conference_id, speaker_id)
+    def update_event(self, conference):
+        """Update and event object in the database
+            Mise à jour d'une conference dans la base de données"""
+        sql = """UPDATE conference
+                 SET titre=%s, resume=%s, date_heure=%s, speaker_id=%s
+                 WHERE id=%s"""
+        arguments = (conference.titre, conference.resume, conference.date_heure, conference.speaker_id,conference.id)
         self.db.initialize_connection()
-        self.db.cursor.execute(self.sql, self.values)
+        self.db.cursor.execute(sql, arguments)
         self.db.connection.commit()
         self.db.close_connection()
 

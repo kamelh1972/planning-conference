@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
         if action == "c":
             print("vous voulez gerer les conference")
-            user_choice = input("que voulez-vous faire:\n a : voir conference\n b : supprimer conference \n d : ajouter conference \n q : quit \n")
+            user_choice = input("que voulez-vous faire:\n a : voir conference\n b : supprimer conference \n d : ajouter conference \n m : modifier conference \n q : quit \n")
 
             if user_choice == "d":
                 model_conference.add_conference()
@@ -55,6 +55,9 @@ if __name__ == '__main__':
 
             if user_choice == "b":
                 model_conference.delete_conference()
+
+            if user_choice == "m":
+                model_conference.update_conference(id)
 
             if user_choice == "q":
                 print("Au revoir")
