@@ -1,53 +1,44 @@
 from .connection import Connection
-from Model.Entities.entity import *
+from Model.Entities.entity import HydrateSpeaker
 
-class Speaker(Hydrate):
+class Speaker():
 
     def __init__(self):
         self.db = Connection()
-        Hydrate.__init__(self)
 
-    def create_speaker(self,prenom,nom,description,profession):
+
+    def create_speaker(self,speaker):
         sql="INSERT INTO speaker(prenom,nom,description,profession) VALUES (%s,%s,%s,%s);"
-        argument = (prenom,nom,description,profession)
+        argument = (speaker.prenom,speaker.nom,speaker.description,speaker.profession)
         self.db.initialize_connection()
         self.db.cursor.execute(sql,argument)
         self.db.connection.commit()
         self.db.close_connection()
+        return True
 
     def display_all(self):
         sql = "SELECT * FROM speaker WHERE statut = TRUE;"
         self.db.initialize_connection()
         self.db.cursor.execute(sql)
-        speaker = self.db.cursor.fetchall()
-        self.db.close_connection()
-        print(speaker)
-
-
-    def display(self,prenom,nom):
-        sql = "SELECT * FROM speaker LEFT JOIN conference ON speaker.id = conference.speaker_id;"
-        argument = (prenom, nom)
-        self.db.initialize_connection()
-        self.db.cursor.execute(sql,argument)
         speaker_conf = self.db.cursor.fetchall()
         self.db.close_connection()
-        if speaker_conf:
-            return Hydrate(speaker_conf)
-        return False
+        for key, value in enumerate(speaker_conf):
+            speaker_conf[key] = HydrateSpeaker(value)
+        return speaker_conf
+
 
     def update(self,column,prenom,nom,description,profession,statut,nouvelles):
-        sql="UPDATE speaker SET "+ column +" =%s WHERE id=%s and nom = %s; "
-        argument= (nouvelles,id,nom)
+        sql="UPDATE speaker SET "+ column +" =%s WHERE prenom=%s and nom = %s; "
+        argument= (nouvelles,prenom,nom)
         self.db.initialize_connection()
         self.db.cursor.execute(sql,argument)
         self.db.connection.commit()
         self.db.close_connection()
 
 
-    def delete(self,id,speaker_id):
-        sql="DELETE FROM speaker LEFT JOIN conference ON speaker.id = conference.speaker_id ;"
-        argument = (id, speaker_id)
+    def delete(self,id):
+        sql="DELETE FROM speaker WHERE id = %s ;"
         self.db.initialize_connection()
-        self.db.cursor.execute(sql,argument)
+        self.db.cursor.execute(sql,(id,))
         self.db.connection.commit()
         self.db.close_connection()
