@@ -26,13 +26,49 @@ class SpeakerView():
             print("Veuillez reessayer:-)")
 
 
-    def update_speaker(self,column,prenom,nom,description,profession,statut,nouvelles):
-        model = Speaker()
-        column = input("Quel speaker voulez vous apporter des changemant(prenon,nom,description,profession) : ")
-        prenom = input(" prenon  :")
-        nom = input(" nom :")
-        nouvelles = input("nouveau changement")
-        event.update(column,prenom,nom,nouvelles)
+    def update_statut(self):
+        """Allow user to change attribut's value for specific event
+            Autoriser l'utilisateur à modifier la valeur de l'attribut pour un événement spécifique"""
+        # Retrieve an speaker if it exists
+        # Récupérer un speaker s'il existe
+        #id = int(input("taper l (id) du speaker a modifier : "))
+        prenom = input("prenom :")
+        nom = input("nom")
+        choice = ""
+        while choice != "s":
+
+            speaker = self.model.single_speaker(prenom,nom)
+            if speaker :
+                break
+            print("Nous ne trouvons rien sur ce speaker")
+            choice = input("Tapez s pour arrêter, n'importe quelle touche pour continuer")
+        # If we have found an event
+        # Si nous avons trouvé un événement
+        if speaker:
+            print("Voici les informations enregistrées")
+            # User can change attributs as long as he wants
+            # L'utilisateur peut modifier les attributs aussi longtemps qu'il le souhaite
+            while True:
+                print(speaker)
+                print("Tapez s pour arrêter")
+                champs = input("taper champs à modifier :  ")
+                if champs  == 's' :
+                    break
+                value = input("Nouvelle valeur du champs à modifier : ")
+                if champs == "statut" or champs == "description" or champs == "profession":
+                    while self.model.single_speaker(speaker.nom, value):
+                        print("le nouveau champs est pris !")
+                        value = input('Nouvelle valeur : ')
+
+                # Set the new value and update the database
+                # Définissez la nouvelle valeur et mettez à jour la base de données
+                setattr(speaker, champs, value)
+            if self.model.update(speaker):
+                print("les informations ont été enregistrées")
+
+            else:
+                raise ValueError("un probleme est survenu")
+
 
     def delete_speaker(self,id):
         model = Speaker()

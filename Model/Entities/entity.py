@@ -6,6 +6,7 @@ class HydrateSpeaker():
         self.nom = None
         self.description = None
         self.profession = None
+        self.statut = None
         if data:
             self.Hydrate_speaker(data)
 
@@ -20,4 +21,4 @@ class HydrateSpeaker():
 
     def __str__(self):
         return """~~~~~~~~~~~~~~~~~~~~~~~~
-{} : {} : {} : {}""".format(self.prenom, self.nom, self.description,self.profession)
+{} : {} : {} : {} : {}""".format(self.prenom, self.nom, self.description,self.profession,self.statut)

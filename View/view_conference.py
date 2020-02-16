@@ -59,8 +59,6 @@ class ConferenceView():
                 if champs  == 's' :
                     break
                 value = input("Nouvelle valeur : ")
-                # If he chooses to change the hour then we check the hour is free
-                # S'il choisit de changer l'heure, nous vérifions que l'heure est gratuite
                 if champs == "id":
                     while self.model.single_conference(event.id, value):
                         print("le nouveau champs est pris !")
@@ -68,4 +66,8 @@ class ConferenceView():
                 # Set the new value and update the database
                 # Définissez la nouvelle valeur et mettez à jour la base de données
                 setattr(event, champs, value)
-            self.model.update_event(event)
+            if self.model.update_event(event):
+                print("les modifications ont ete enregister")
+
+            else:
+                raise ValueError("un probleme est survenu")

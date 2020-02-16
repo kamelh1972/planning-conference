@@ -28,7 +28,7 @@ if __name__ == '__main__':
         action = input(": ")
         if action == "s":
             print("vous voulez gerer les speaker")
-            user_choice = input("que voulez-vous faire:\n a : voir speaker\n b : supprimer speaker \n c : ajouter speaker \n q : quit \n")
+            user_choice = input("que voulez-vous faire:\n a : voir speaker\n b : supprimer speaker \n c : ajouter speaker \n m : modifier speaker\n q : quit \n")
             if user_choice == "a":
                 print("voici la liste des speaker actifs")
                 model.show_speaker()
@@ -38,6 +38,9 @@ if __name__ == '__main__':
 
             if user_choice == "c":
                 model.add_speaker()
+
+            if user_choice == "m":
+                model.update_statut()
 
             if user_choice == "q":
                 print("Au revoir à bientot")

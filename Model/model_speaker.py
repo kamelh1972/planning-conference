@@ -26,10 +26,21 @@ class Speaker():
             speaker_conf[key] = HydrateSpeaker(value)
         return speaker_conf
 
+    def single_speaker(self,prenom,nom):
+        sql = "SELECT * FROM speaker WHERE prenom = %s AND nom = %s;"
+        self.db.initialize_connection()
+        self.db.cursor.execute(sql,(prenom,nom))
+        speaker = self.db.cursor.fetchone()
+        self.db.close_connection()
+        if speaker:
+            return HydrateSpeaker(speaker)
+        return False
 
-    def update(self,column,prenom,nom,description,profession,statut,nouvelles):
-        sql="UPDATE speaker SET "+ column +" =%s WHERE prenom=%s and nom = %s; "
-        argument= (nouvelles,prenom,nom)
+
+
+    def update(self,speaker):
+        sql="UPDATE speaker SET  description = %s, profession = %s, statut = %s WHERE id = %s; "
+        argument= (speaker.description, speaker.profession,speaker.statut,speaker.id)
         self.db.initialize_connection()
         self.db.cursor.execute(sql,argument)
         self.db.connection.commit()
